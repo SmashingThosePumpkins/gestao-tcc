@@ -1,0 +1,21 @@
+# O arquivo .gitignore serve para, ao fazer o comando .git add *, o git não adicionar
+# certos arquivos indesejados no nosso repositório.
+
+# Arquivos e pastas específicos do Node.js
+node_modules/
+package-lock.json
+
+# Arquivos de log do Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos gerados pelo EJS
+views/**/*.ejs
+
+# Arquivos de ambiente
+.env
+
+# Arquivos e pastas do sistema operacional
+.DS_Store
+Thumbs.db

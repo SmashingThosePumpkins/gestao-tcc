@@ -1,0 +1,85 @@
+datasource db {
+    provider = "mysql"
+    url      = "mysql://${env:DB_USER}:${env:DB_PASS}@${env:DB_HOST}:${env:DB_PORT}//database_name"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Usuario {
+    id        Int         @id @default(autoincrement())
+    login     String
+    senha     String
+    tipo      Int?
+    Aluno     Aluno[]
+    Professor Professor[]
+}
+
+model Aluno {
+    id         Int     @id @default(autoincrement())
+    nome       String?
+    ra         String?
+    id_usuario Int?
+    id_curso   Int?
+    termo      Int?
+    status     Int?
+
+    Usuario  Usuario?        @relation(fields: [id_usuario], references: [id])
+    Curso    Curso?          @relation(fields: [id_curso], references: [id])
+    Projetos AlunosProjeto[]
+}
+
+model AlunosProjeto {
+    id         Int  @id @default(autoincrement())
+    id_aluno   Int?
+    id_projeto Int?
+
+    Aluno   Aluno?   @relation(fields: [id_aluno], references: [id])
+    Projeto Projeto? @relation(fields: [id_projeto], references: [id])
+}
+
+model Arquivo {
+    id              Int               @id @default(autoincrement())
+    arquivo         Bytes?
+    descricao       String?
+    Projetos        Projeto[]
+    ProjetosArquivo ProjetosArquivo[]
+}
+
+model Curso {
+    id       Int       @id @default(autoincrement())
+    nome     String?
+    Alunos   Aluno[]
+    Projetos Projeto[]
+}
+
+model Professor {
+    id         Int       @id @default(autoincrement())
+    id_usuario Int?
+    Usuario    Usuario?  @relation(fields: [id_usuario], references: [id])
+    Projeto    Projeto[]
+}
+
+model Projeto {
+    id            Int     @id @default(autoincrement())
+    nome          String?
+    descricao     String?
+    id_orientador Int?
+    id_curso      Int?
+
+    Orientador      Professor?        @relation(fields: [id_orientador], references: [id])
+    Curso           Curso?            @relation(fields: [id_curso], references: [id])
+    Arquivos        Arquivo[]
+    Alunos          AlunosProjeto[]
+    ProjetosArquivo ProjetosArquivo[]
+}
+
+model ProjetosArquivo {
+    id         Int  @id @default(autoincrement())
+    id_projeto Int?
+    id_arquivo Int?
+
+    Projeto Projeto? @relation(fields: [id_projeto], references: [id])
+    Arquivo Arquivo? @relation(fields: [id_arquivo], references: [id])
+}
