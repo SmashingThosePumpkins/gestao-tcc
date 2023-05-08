@@ -1,6 +1,6 @@
 datasource db {
-    provider = "mysql"
-    url      = "mysql://${env:DB_USER}:${env:DB_PASS}@${env:DB_HOST}:${env:DB_PORT}//database_name"
+    provider = "postgresql"
+    url      = "postgresql://${env:DB_USER}:${env:DB_PASS}@${env:DB_HOST}:${env:DB_PORT}//projeto"
 }
 
 generator client {
