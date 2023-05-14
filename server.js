@@ -1,11 +1,9 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const { PrismaClient } = require('@prisma/client');
 
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
