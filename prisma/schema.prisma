@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 model Usuario {
@@ -67,7 +67,7 @@ model Projeto {
     descricao     String?
     id_orientador Int?
     id_curso      Int?
-    status     Int?
+    status        Int?
 
     Orientador      Professor?        @relation(fields: [id_orientador], references: [id])
     Curso           Curso?            @relation(fields: [id_curso], references: [id])
@@ -77,9 +77,10 @@ model Projeto {
 }
 
 model ProjetosArquivo {
-    id         Int  @id @default(autoincrement())
-    id_projeto Int?
-    id_arquivo Int?
+    id           Int  @id @default(autoincrement())
+    id_projeto   Int?
+    id_arquivo   Int?
+    tipo_arquivo Int?
 
     Projeto Projeto? @relation(fields: [id_projeto], references: [id])
     Arquivo Arquivo? @relation(fields: [id_arquivo], references: [id])
