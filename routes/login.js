@@ -34,8 +34,8 @@ function checkToken(req, res, next) {
             return res.status(500).render('login.ejs', { error: 'Erro de autorização.' })
         }
 
-        res.locals.userId = decoded.userId;
-        res.locals.userType = decoded.userType;
+        res.cookie.userId = decoded.userId;
+        res.cookie.userType = decoded.userType;
         res.status(200);
         return next();
     })
