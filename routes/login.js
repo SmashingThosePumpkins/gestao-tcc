@@ -4,6 +4,10 @@ const bcrypt = require('bcrypt');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const ALUNO = 0
+const ORIENTADOR = 1
+const ADMINISTRADOR = 2
+
 const SECRET_KEY = 'chave_secreta';
 
 async function login(req, res) {
@@ -25,7 +29,7 @@ async function login(req, res) {
     }
 };
 
-function checkToken(req, res, next) {
+async function checkToken(req, res, next) {
     const token = res.cookie.auth
     jwt.verify(token, SECRET_KEY, function (err, decoded) {
         if (err || !decoded) {
@@ -34,11 +38,34 @@ function checkToken(req, res, next) {
             return res.status(500).render('login.ejs', { error: 'Erro de autorização.' })
         }
 
-        res.cookie.userId = decoded.userId;
-        res.cookie.userType = decoded.userType;
+        res.cookie.decodedInfo = decoded;
         res.status(200);
         return next();
     })
 }
 
-module.exports = { login, checkToken }
+async function isStudent(req, res, next) {
+    if (res.cookie.decodedInfo.userType == ALUNO) {
+        return next()
+    }
+
+    res.status(401).send('Acesso negado.')
+}
+
+async function isOrienter(req, res, next) {
+    if (res.cookie.decodedInfo.userType == ORIENTADOR) {
+        return next()
+    }
+
+    res.status(401).send('Acesso negado.')
+}
+
+async function isAdmin(req, res, next) {
+    if (res.cookie.decodedInfo.userType == ADMINISTRADOR) {
+        return next()
+    }
+
+    res.status(401).send('Acesso negado.')
+}
+
+module.exports = { login, checkToken, isStudent, isOrienter, isAdmin }
