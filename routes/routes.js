@@ -18,7 +18,7 @@ const ORIENTADOR = 1
 const ADMINISTRADOR = 2
 
 router.get('/', loginService.checkToken, (req, res) => {
-    userType = res.locals.userType
+    userType = res.cookie.userType
     switch (userType) {
         case ALUNO: {
             renderAluno(res)
@@ -32,25 +32,29 @@ router.get('/', loginService.checkToken, (req, res) => {
             renderAdministrador(res)
             return;
         }
-     }
+    }
 })
 
-function renderAluno(res) {
+async function renderAluno(res) {
+    const aluno = prisma.aluno.findFirst({ where: { id_usuario: res.cookie.userId } })
+    const listaProjetos = prisma.alunosProjeto.findMany({ where: { aluno: { id_usuario: userId } }, include: { Projeto: true } }).map((projeto) => projeto.Projeto)
     res.render('indexAluno.ejs', {
-
+        aluno: aluno,
+        listaProjetos: listaProjetos
     })
 }
 
-function renderOrientador(res) {
+async function renderOrientador(res) {
+    const professor = prisma.professor.findFirst({ where: { id_usuario: res.cookie.userId } })
+    const listaProjetos = prisma.projeto.findMany({ where: { id_orientador: professor.id } })
     res.render('indexOrientador.ejs', {
-        
+        professor: professor,
+        listaProjetos: listaProjetos
     })
 }
 
-function renderAdministrador(res) {
-    res.render('indexAdministrador.ejs', {
-
-    })
+async function renderAdministrador(res) {
+    res.render('indexAdministrador.ejs', {})
 }
 
 module.exports = router
