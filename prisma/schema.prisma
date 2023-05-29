@@ -1,6 +1,6 @@
 datasource db {
     provider = "mysql"
-    url      = "mysql://root:root@127.0.0.1:3306/gestao-tcc"
+    url      = "mysql://root:Root@127.0.0.1:3306/gestao-tcc"
 }
 
 generator client {
