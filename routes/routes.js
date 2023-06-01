@@ -25,7 +25,8 @@ router.get('/', loginService.checkToken, async (req, res) => {
             const listaProjetos = prisma.alunosProjeto.findMany({ where: { aluno: { id_usuario: userId } }, include: { Projeto: true } }).map((projeto) => projeto.Projeto)
             res.render('indexAluno.ejs', {
                 aluno: aluno,
-                listaProjetos: listaProjetos
+                listaProjetos: listaProjetos,
+                userInfo: res.cookie.decodedInfo
             })
             return;
         }
@@ -34,12 +35,15 @@ router.get('/', loginService.checkToken, async (req, res) => {
             const listaProjetos = prisma.projeto.findMany({ where: { id_orientador: professor.id } })
             res.render('indexOrientador.ejs', {
                 professor: professor,
-                listaProjetos: listaProjetos
+                listaProjetos: listaProjetos,
+                userInfo: res.cookie.decodedInfo
             })
             return;
         }
         case ADMINISTRADOR: {
-            res.render('indexAdministrador.ejs', {})
+            res.render('indexAdministrador.ejs', {
+                userInfo: res.cookie.decodedInfo
+            })
             return;
         }
     }
@@ -48,7 +52,41 @@ router.get('/', loginService.checkToken, async (req, res) => {
 router.get('/coordenador/alunos', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
     const alunos = prisma.aluno.findMany();
     res.render('coordenadorAlunos.ejs', {
-        alunos: alunos
+        alunos: alunos,
+        userInfo: res.cookie.decodedInfo
+    })
+} )
+
+router.get('/coordenador/orientadores', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
+    const orientadores = prisma.professor.findMany();
+    res.render('coordenadorOrientadores.ejs', {
+        orientadores: orientadores,
+        userInfo: res.cookie.decodedInfo
+    })
+} )
+
+router.get('/coordenador/projetos', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
+    const projetos = prisma.projeto.findMany();
+    res.render('coordenadorProjetos.ejs', {
+        projetos: projetos,
+        userInfo: res.cookie.decodedInfo
+    })
+} )
+
+router.get('/coordenador/cursos', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
+    const cursos = prisma.curso.findMany();
+    res.render('coordenadorCursos.ejs', {
+        cursos: cursos,
+        userInfo: res.cookie.decodedInfo
+    })
+} )
+
+router.get('/coordenador/projeto/:id', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
+    const id = req.params.id;
+    const projeto = prisma.projeto.findFirst({ where: { id: id } })
+    res.render('projeto.ejs', {
+        projeto: projeto,
+        userInfo: res.cookie.decodedInfo
     })
 } )
 
