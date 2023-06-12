@@ -1,0 +1,69 @@
+html {
+    width: 100vw;
+    height: 100vh; 
+}
+
+body {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex: 1;
+    font-family: 'Open Sans', sans-serif;
+    backdrop-filter: blur(7px);
+    background-image: url("/img/fatec.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+form {
+    display: inline;
+    width: 15%;
+    height: 100%;
+    margin-left: 40vw;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h3 {
+    font-size: 26px;
+    display: block;
+    line-height: normal;
+    margin-bottom: 15px;
+}
+
+form input {
+    width: 15vw;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    background-color: #E7E7E7;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+}
+
+form input[type="submit"] {
+    width: 8vw;
+    margin-bottom: 2px;
+    padding: 15px 20px;
+    background-color: darkred;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: red;
+}
+
+form input[type="text"]::placeholder,
+form input[type="email"]::placeholder,
+form input[type="password"]::placeholder {
+    color: #ccc;
+    text-align: center;
+    font-size: 24px;
+}
