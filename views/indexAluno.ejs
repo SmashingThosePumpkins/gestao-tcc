@@ -4,14 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="public/reset.css" rel="stylesheet">
-    <link href="public/styles.css" rel="stylesheet">
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/indexAluno.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <title>Index</title>
 </head>
-<body>
-    <h1>Inicial aluno!</h1>
-    <%= JSON.stringify(aluno) %>
-    <%= JSON.stringify(listaProjetos) %>
-    <%= JSON.stringify(userInfo) %>
+<body class="fade-in">
+    <div class="container">
+        <div class="studentProfileCard">
+            <div class="profileCardText">
+                <h1 class="redBorderBottom">Bem vindo(a), <%= aluno.nome.split(" ")[0] %>!</h1>
+                <h2 class="redBorderBottom">RA: <%= aluno.ra %></h2>
+                <h2 class="redBorderBottom">Curso: <%= aluno.Curso.nome %></h2>
+            </div>
+            <img src="/img/blank-user.jpg" class="profilePictureBig">
+        </div>
+        <h2 class="redBorderBottom">Projeto: <%= listaProjetos[0].nome %></h2>
+        <a href="/projeto/<%= listaProjetos[0].id %>">
+            <div class="mainPageProjectCard">
+                <h3 class="bold">Descrição do projeto:</h3>
+                <p class="projectCardDescription">
+                    <%= listaProjetos[0].descricao %>
+                </p>
+            </div>
+        </a>
+    </div>
 </body>
 </html>

@@ -1,0 +1,50 @@
+@import url('./base.css');
+
+body {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex: 1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0em;
+    margin: 0 auto;
+}
+
+.studentProfileCard {
+    display: flex;
+    flex-direction: row;
+    gap: 7em;
+}
+
+.profileCardText {
+    flex-grow: 1;
+}
+
+.profilePictureBig {
+    border-radius: 20%;
+    object-fit: cover;
+    width: 11em;
+    height: 15em;
+}
+
+.redBorderBottom {
+    border-bottom: 4px darkred solid;
+}
+
+.mainPageProjectCard {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    border: 2px darkred solid;
+    padding: 10px 15px;
+    width: 60vw;
+}
+
+.projectCardDescription {
+    flex-grow: 1;
+}

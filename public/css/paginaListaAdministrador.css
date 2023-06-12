@@ -83,6 +83,10 @@ body {
     width: 15em;
 }
 
+.span-row-xlarge {
+    width: 25em;
+}
+
 .flex-end-buttons-row {
     margin-left: auto;
 }

@@ -8,11 +8,35 @@ h1 {
     font-size: 56px;
     display: block;
     line-height: normal;
+    margin-bottom: 25px;
+}
+
+h2 {
+    font-size: 36px;
+    display: block;
+    line-height: normal;
     margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 26px;
+    display: block;
+    line-height: normal;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 20px;
+    display: block;
+    line-height: normal;
 }
 
 button {
     cursor: pointer;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 .fade-in {
