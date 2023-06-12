@@ -1,0 +1,98 @@
+@import url('./base.css');
+
+body {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex: 1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+    margin: 0 auto;
+}
+
+.addButton {
+    align-self: flex-end;
+    color: white;
+    background-color: darkred;
+    border-radius: 32px;
+    font-size: 24px;
+    padding: 10px 15px;
+    transition-duration: 300ms;
+}
+
+.addButton:hover {
+    background-color: red;
+    transition-duration: 300ms;
+    border-color: red;
+}
+
+.topRow {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    min-width: 70vw;
+}
+
+.objectListWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    overflow-y: scroll;
+    gap: 10px;
+}
+
+.objectListWrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.objectListWrapper::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 8px;
+}
+
+.objectListWrapper::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.objectListItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 3px darkred solid;
+    min-height: 2em;
+    align-items: center;
+}
+
+.span-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.span-row-medium {
+    width: 10em;
+}
+
+.span-row-large {
+    width: 15em;
+}
+
+.flex-end-buttons-row {
+    margin-left: auto;
+}
+
+.flex-end-button {
+    cursor: pointer;
+    width: 50px;
+    background: none;
+    text-align: center;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    font-size: 24px;
+}

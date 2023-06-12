@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+*, body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+    font-size: 56px;
+    display: block;
+    line-height: normal;
+    margin-bottom: 20px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fade-in 0.5s ease-in forwards;
+}
+  
+@keyframes fade-in {
+    to {
+      opacity: 1;
+    }
+}

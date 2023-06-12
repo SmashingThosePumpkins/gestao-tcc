@@ -21,8 +21,10 @@ router.get('/', loginService.checkToken, async (req, res) => {
     userType = res.cookie.decodedInfo.userType
     switch (userType) {
         case ALUNO: {
-            const aluno = prisma.aluno.findFirst({ where: { id_usuario: res.cookie.decodedInfo.userId } })
-            const listaProjetos = prisma.alunosProjeto.findMany({ where: { aluno: { id_usuario: userId } }, include: { Projeto: true } }).map((projeto) => projeto.Projeto)
+            const userId = res.cookie.decodedInfo.userId;
+            const aluno = prisma.aluno.findFirst({ where: { id_usuario: userId } })
+            const listaAlunosProjeto = await prisma.alunosProjeto.findMany({ where: { Aluno: { id_usuario: userId } }, include: { Projeto: true } });
+            const listaProjetos = listaAlunosProjeto.map((projeto) => projeto.Projeto)
             res.render('indexAluno.ejs', {
                 aluno: aluno,
                 listaProjetos: listaProjetos,
@@ -31,8 +33,9 @@ router.get('/', loginService.checkToken, async (req, res) => {
             return;
         }
         case ORIENTADOR: {
-            const professor = prisma.professor.findFirst({ where: { id_usuario: res.cookie.decodedInfo.userId } })
-            const listaProjetos = prisma.projeto.findMany({ where: { id_orientador: professor.id } })
+            const userId = res.cookie.decodedInfo.userId;
+            const professor = prisma.professor.findFirst({ where: { userId } })
+            const listaProjetos = await prisma.projeto.findMany({ where: { id_orientador: professor.id } })
             res.render('indexOrientador.ejs', {
                 professor: professor,
                 listaProjetos: listaProjetos,
@@ -49,41 +52,46 @@ router.get('/', loginService.checkToken, async (req, res) => {
     }
 })
 
-router.get('/coordenador/alunos', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
-    const alunos = prisma.aluno.findMany();
+router.get('/coordenador/alunos', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    const alunos = await prisma.aluno.findMany({
+        include: {
+            Curso: true
+        }
+    });
+    
     res.render('coordenadorAlunos.ejs', {
         alunos: alunos,
         userInfo: res.cookie.decodedInfo
     })
 } )
 
-router.get('/coordenador/orientadores', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
-    const orientadores = prisma.professor.findMany();
+router.get('/coordenador/orientadores', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    const orientadores = await prisma.professor.findMany();
     res.render('coordenadorOrientadores.ejs', {
         orientadores: orientadores,
         userInfo: res.cookie.decodedInfo
     })
 } )
 
-router.get('/coordenador/projetos', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
-    const projetos = prisma.projeto.findMany();
+router.get('/coordenador/projetos', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    const projetos = await prisma.projeto.findMany();
     res.render('coordenadorProjetos.ejs', {
         projetos: projetos,
         userInfo: res.cookie.decodedInfo
     })
 } )
 
-router.get('/coordenador/cursos', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
-    const cursos = prisma.curso.findMany();
+router.get('/coordenador/cursos', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    const cursos = await prisma.curso.findMany();
     res.render('coordenadorCursos.ejs', {
         cursos: cursos,
         userInfo: res.cookie.decodedInfo
     })
 } )
 
-router.get('/coordenador/projeto/:id', loginService.checkToken, loginService.isAdmin, (req, res, next) => {
+router.get('/coordenador/projeto/:id', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     const id = req.params.id;
-    const projeto = prisma.projeto.findFirst({ where: { id: id } })
+    const projeto = await prisma.projeto.findFirst({ where: { id: id } })
     res.render('projeto.ejs', {
         projeto: projeto,
         userInfo: res.cookie.decodedInfo

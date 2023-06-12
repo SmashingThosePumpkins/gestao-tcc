@@ -1,16 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="public/reset.css" rel="stylesheet">
-    <link href="public/styles.css" rel="stylesheet">
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/paginaListaAdministrador.css" rel="stylesheet">
     <title>Index</title>
 </head>
-<body>
-    <h1>Pagina dos alunos do coordenador</h1>
-    <%= JSON.stringify(alunos) %>
-    <%= JSON.stringify(userInfo) %>
+
+<body class="fade-in">
+    <%- include('partials/backButton.ejs') %>
+    <div class="container">
+        <div class="topRow">
+            <%- include('partials/searchBox.ejs') %>
+                <button class="addButton">Adicionar aluno ➕</button>
+        </div>
+        <div class="objectListWrapper">
+            <% if (!alunos || Object.keys(alunos).length===0) { %>
+                <p>Ops! Parece que não existe nenhum aluno cadastrado ainda.</p>
+            <% } else { %>
+                <% for (i = 0; i < alunos.length; i++) { %>
+                    <% let aluno = alunos[i] %>
+                    <div class="objectListItem">
+                        <span class="span-row span-row-large">
+                            <%= aluno.nome %>
+                        </span>
+                        <span class="span-row span-row-medium">
+                            <%= aluno.ra %>
+                        </span>
+                        <span class="span-row span-row-large">
+                            <%= aluno.Curso.nome %>
+                        </span>
+                        <div class="flex-end-buttons-row">
+                            <button class="flex-end-button">🗑️</button>
+                            <button class="flex-end-button">✏️</button>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
 </body>
+
 </html>

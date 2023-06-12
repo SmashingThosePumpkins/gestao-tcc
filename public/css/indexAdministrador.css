@@ -1,0 +1,59 @@
+@import url('./base.css');
+
+body {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex: 1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+    margin: 0 auto;
+}
+
+.adminProfileCard {
+    display: flex;
+    flex-direction: row;
+    gap: 7em;
+}
+
+.profileCardText {
+    flex-grow: 1;
+}
+
+.profilePictureBig {
+    border-radius: 20%;
+    object-fit: cover;
+    width: 11em;
+    height: 15em;
+}
+
+.redBorderBottom {
+    border-bottom: 4px darkred solid;
+}
+
+.adminButton {
+    background-color: darkred;
+    width: 9em;
+    height: 4em;
+    border-radius: 20px;
+    color:white;
+    font-size: 1.6em;
+    transition-duration: 300ms;
+}
+
+.adminButton:hover {
+    background-color: red;
+    transition-duration: 300ms;
+    border:none;
+}
+
+.adminButtonContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    overflow-x: visible;
+}

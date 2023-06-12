@@ -1,0 +1,37 @@
+<style>
+    .searchBoxWrapper {
+        align-self: stretch;
+        flex-grow: 1;
+        position: relative;
+        display: flex;
+    }
+
+    .searchBox {
+        width: 100%;
+        outline: none;
+        border: none;
+        border-radius: 5px 0 0 5px;
+        border-bottom: 3px solid darkred;
+        font-size: 32px;
+    }
+
+    .searchBox:focus {
+        color: darkred;
+    }
+
+    .searchButton {
+        cursor: pointer;
+        width: 50px;
+        background: none;
+        text-align: center;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        border-bottom: 3px solid darkred;
+        font-size: 32px;
+    }
+</style>
+
+<div class="searchBoxWrapper">
+    <input type="text" class="searchBox" id="searchBox" placeholder="Procurar alunos...">
+    <button class="searchButton">🔍</button>
+</div>
