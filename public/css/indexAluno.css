@@ -35,16 +35,50 @@ body {
     border-bottom: 4px darkred solid;
 }
 
-.mainPageProjectCard {
-    cursor: pointer;
+.projectSection {
+    position: relative;
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
+    gap: 0;
+    max-width: 60vw;
+    max-height: 35vh;
+}
+
+.projectSection h2 {
+    margin-bottom: 0;
+}
+
+.mainPageProjectCard {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0px 0px 20px 20px;
     border: 2px darkred solid;
+    min-height: 22vh;
     padding: 10px 15px;
-    width: 60vw;
+}
+
+.goToProjectButton {
+    padding: 10px 20px;
+    background-color: darkred;
+    color: #fff;
+    transition-duration: 300ms;
+    border-radius: 32px;
+    font-size: 24px;
+
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+}
+
+.goToProjectButton:hover {
+    background-color: red;
+    transition-duration: 300ms;
+    border-color: red;
 }
 
 .projectCardDescription {
-    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
 }

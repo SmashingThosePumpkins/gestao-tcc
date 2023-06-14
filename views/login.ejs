@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/reset.css" rel="stylesheet">
     <link href="/css/login.css" rel="stylesheet">
-    <title>login</title>
+    <title>GradMate</title>
 </head>
+
 <body>
-        <form action="/login" method="POST">
-            <h3>Faça seu Login</h3>
-            <input type="email" name="login" placeholder="Email">
-            <input type="password" name="senha" placeholder="Senha">
-            <input type="submit">
-        </form> 
-<div>
-    <img src="/img/logo_login.png">
-</div>
-
-
+    <div class="container">
+        <form class="formulario" action="/login" method="POST">
+            <h3 class="bold">Login</h3>
+            <input class="textInput" type="email" name="login" placeholder="Email">
+            <input class="textInput" type="password" name="senha" placeholder="Senha">
+            <input class="botaoSubmit" type="submit" value="Entrar">
+        </form>
+        <img class="logo" src="/img/logo_login.png">
+    </div>
 </body>
-</html>
 
+</html>

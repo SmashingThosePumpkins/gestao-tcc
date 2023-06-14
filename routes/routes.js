@@ -17,6 +17,14 @@ router.use((req, res, next) => {
 
 router.post('/login', loginService.login);
 
+//
+//
+//
+// Rotas para buscar páginas
+//
+//
+//
+
 router.get('/', loginService.checkToken, async (req, res) => {
     userType = res.cookie.decodedInfo.userType
     switch (userType) {
@@ -91,11 +99,24 @@ router.get('/coordenador/cursos', loginService.checkToken, loginService.isAdmin,
 
 router.get('/projeto/:id', loginService.checkToken, async (req, res, next) => {
     const id = req.params.id;
-    const projeto = await prisma.projeto.findFirst({ where: { id: id } })
+    const projeto = await prisma.projeto.findFirst({ where: { id: Number(id) } })
     res.render('projeto.ejs', {
         projeto: projeto,
         userInfo: res.cookie.decodedInfo
     })
 } )
+
+//
+//
+//
+// Rotas de cadastro
+//
+//
+//
+
+router.post('/aluno', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    const aluno = req.body;
+    
+})
 
 module.exports = router

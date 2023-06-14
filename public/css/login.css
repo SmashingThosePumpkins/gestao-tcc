@@ -1,69 +1,61 @@
-html {
-    width: 100vw;
-    height: 100vh; 
-}
+@import url('./base.css');
 
 body {
-    display: flex;
-    align-items: center;
-    min-height: 100vh;
-    flex: 1;
-    font-family: 'Open Sans', sans-serif;
-    backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px) brightness(60%);
     background-image: url("/img/fatec.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 }
 
-form {
-    display: inline;
-    width: 15%;
-    height: 100%;
-    margin-left: 40vw;
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5vh;
+    min-height: 100vh;
+}
+
+.logo {
+    object-fit: contain;
+    height: 16vh;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5em;
+    max-width: 15em;
+    max-height: 20em;
     background-color: #fff;
     border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    padding: 20px 30px;
+    border: 1px solid #000;
+
+    /* Margem artificial pra parecer mais centralizado */
+    margin-top: 5vh;
 }
 
-h3 {
-    font-size: 26px;
-    display: block;
-    line-height: normal;
-    margin-bottom: 15px;
-}
-
-form input {
-    width: 15vw;
-    margin-top: 20px;
-    margin-bottom: 10px;
+.textInput {
     background-color: #E7E7E7;
     padding: 20px;
-    box-sizing: border-box;
     border: 1px solid #ccc;
-    border-radius: 25px;
-    font-size: 16px;
+    border-radius: 20px;
 }
 
-form input[type="submit"] {
-    width: 8vw;
-    margin-bottom: 2px;
-    padding: 15px 20px;
+.botaoSubmit {
+    padding: 10px 20px;
     background-color: darkred;
     color: #fff;
-    cursor: pointer;
-    transition: background-color 0.5s ease, color 0.5s ease;
-}
-
-form input[type="submit"]:hover {
-    background-color: red;
-}
-
-form input[type="text"]::placeholder,
-form input[type="email"]::placeholder,
-form input[type="password"]::placeholder {
-    color: #ccc;
-    text-align: center;
+    transition-duration: 300ms;
+    border-radius: 32px;
     font-size: 24px;
+}
+
+.botaoSubmit:hover {
+    background-color: red;
+    transition-duration: 300ms;
+    border-color: red;
 }
