@@ -30,7 +30,7 @@ router.get('/', loginService.checkToken, async (req, res) => {
     switch (userType) {
         case ALUNO: {
             const userId = res.cookie.decodedInfo.userId;
-            const aluno = await prisma.aluno.findFirst({ where: { id_usuario: userId } , include: { Curso: true } })
+            const aluno = await prisma.aluno.findFirst({ where: { id_usuario: userId }, include: { Curso: true } })
             const listaAlunosProjeto = await prisma.alunosProjeto.findMany({ where: { Aluno: { id_usuario: userId } }, include: { Projeto: true } });
             const listaProjetos = listaAlunosProjeto.map((projeto) => projeto.Projeto)
             res.render('indexAluno.ejs', {
@@ -66,12 +66,12 @@ router.get('/coordenador/alunos', loginService.checkToken, loginService.isAdmin,
             Curso: true
         }
     });
-    
+
     res.render('coordenadorAlunos.ejs', {
         alunos: alunos,
         userInfo: res.cookie.decodedInfo
     })
-} )
+})
 
 router.get('/coordenador/orientadores', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     const orientadores = await prisma.professor.findMany();
@@ -79,7 +79,7 @@ router.get('/coordenador/orientadores', loginService.checkToken, loginService.is
         orientadores: orientadores,
         userInfo: res.cookie.decodedInfo
     })
-} )
+})
 
 router.get('/coordenador/projetos', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     const projetos = await prisma.projeto.findMany();
@@ -87,7 +87,7 @@ router.get('/coordenador/projetos', loginService.checkToken, loginService.isAdmi
         projetos: projetos,
         userInfo: res.cookie.decodedInfo
     })
-} )
+})
 
 router.get('/coordenador/cursos', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     const cursos = await prisma.curso.findMany();
@@ -95,16 +95,28 @@ router.get('/coordenador/cursos', loginService.checkToken, loginService.isAdmin,
         cursos: cursos,
         userInfo: res.cookie.decodedInfo
     })
-} )
+})
 
 router.get('/projeto/:id', loginService.checkToken, async (req, res, next) => {
     const id = req.params.id;
-    const projeto = await prisma.projeto.findFirst({ where: { id: Number(id) } })
+    const projeto = await prisma.projeto.findUnique({
+        where: {
+            id: Number(id)
+        },
+        include: {
+            Alunos: {
+                include: {
+                    Aluno: true
+                },
+            },
+            ProjetosArquivo: true
+        }
+    })
     res.render('projeto.ejs', {
         projeto: projeto,
         userInfo: res.cookie.decodedInfo
     })
-} )
+})
 
 //
 //
@@ -116,7 +128,7 @@ router.get('/projeto/:id', loginService.checkToken, async (req, res, next) => {
 
 router.post('/aluno', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     const aluno = req.body;
-    
+
 })
 
 module.exports = router

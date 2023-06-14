@@ -1,0 +1,108 @@
+@import url('./base.css');
+
+body {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex: 1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    gap: 2em;
+    max-width: 80vw;
+    height: 95vh;
+}
+
+.nameAndDescriptionSection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px
+}
+.nameAndDescriptionSection .upperPart {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nameAndDescriptionSection .lowerPart p {
+    max-height:8em;
+    overflow: auto;
+}
+
+.projectName {
+    flex-grow: 1;
+}
+
+.projectStatus {
+    align-self: flex-end;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background-color: darkred;
+    color: white;
+}
+
+.editButton {
+    width: 50px;
+    background: none;
+    text-align: center;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    font-size: 24px;
+
+    float: right;
+}
+
+.projectInfoSection {
+    display: flex;
+    flex-direction: row;
+    gap: 5em;
+}
+
+.studentsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.studentCard {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+    text-align: left;
+    padding: 1em;
+    border-radius: 20px;
+    background-color: darkred;
+
+    cursor: pointer; 
+    transition-timing-function: ease-out;
+    transition-duration: 300ms;
+}
+
+.studentCard:hover{
+    background-color: red;
+    transform: scale(102%);
+    transition-timing-function: ease-out;
+    transition-duration: 300ms;
+}
+
+.studentPicture {
+    object-fit: cover;
+    width: 4em;
+    height: 4em;
+}
+
+.studentName {
+    color: white;
+}
+
+.documentsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}

@@ -1,16 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="public/reset.css" rel="stylesheet">
-    <link href="public/styles.css" rel="stylesheet">
-    <title>Index</title>
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/projeto.css" rel="stylesheet">
+    <title>GradMate</title>
 </head>
-<body>
-    <h1>Pagina individual do projeto</h1>
-    <%= JSON.stringify(projeto) %>
-    <%= JSON.stringify(userInfo) %>
+
+<body class="fade-in">
+    <%- include('partials/backButton.ejs') %>
+    <div class="container">
+        <div class="nameAndDescriptionSection">
+            <div class="upperPart redBorderBottom">
+                <h2 class="projectName bold">
+                    <%= projeto.nome %>
+                </h2>
+                <h3 class="projectStatus">
+                    <% if (projeto.status === 0) { %>
+                        Pré-projeto
+                    <% } else if (projeto.status === 1) { %>
+                        Qualificação
+                    <% } else if (projeto.status === 2) { %>
+                        Defesa
+                    <% } else if (projeto.status === 3) { %>
+                        Concluído
+                    <% } else if (projeto.status === 4) { %>
+                        Trancado
+                    <% } else { %>
+                        Status Desconhecido <%= projeto.status %>
+                    <% } %>
+                </h3>
+            </div>
+            <div class="lowerPart">
+                <button class="editButton">
+                    ✏️
+                </button>
+                <p>
+                    <%= projeto.descricao %>
+                </p>
+            </div>
+        </div>
+        <div class="projectInfoSection">
+            <div class="studentsSection">
+                <h3 class="documentosHeader redBorderBottom">
+                    Integrantes
+                </h3>
+                <% for (let i = 0; i < projeto.Alunos.length; i++) { %>
+                    <% const aluno = projeto.Alunos[i].Aluno %>
+                    <div class="studentCard">
+                        <img src="/img/blank-user.jpg" class="studentPicture">
+                        <p class="studentName"><%= aluno.nome %></p>
+                    </div>
+                <% } %>
+            </div>
+            <div class="documentsSection">
+                <h3 class="documentosHeader redBorderBottom">
+                    Documentos
+                </h3>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

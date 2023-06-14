@@ -31,10 +31,6 @@ body {
     height: 15em;
 }
 
-.redBorderBottom {
-    border-bottom: 4px darkred solid;
-}
-
 .projectSection {
     position: relative;
     display: flex;
