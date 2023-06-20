@@ -1,0 +1,98 @@
+@import url('./base.css');
+
+body {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex: 1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    margin: 0 auto;
+}
+
+.professorProfileCard {
+    display: flex;
+    flex-direction: row;
+    gap: 7em;
+}
+
+.profileCardText {
+    display: flex;
+    flex-direction: column;
+}
+
+.professorNameSpace {
+    flex-grow: 2;
+}
+
+.profilePictureBig {
+    border-radius: 20%;
+    object-fit: cover;
+    width: 11em;
+    height: 15em;
+}
+
+.projectsSection::-webkit-scrollbar {
+    width: 8px;
+}
+
+.projectsSection::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 8px;
+}
+
+.projectsSection::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.objectListItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 24px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 3px darkred solid;
+    min-height: 2em;
+    align-items: center;
+}
+
+.span-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.span-row-medium {
+    width: 10em;
+}
+
+.span-row-large {
+    width: 15em;
+}
+
+.span-row-xlarge {
+    width: 25em;
+}
+
+.flex-end-buttons-row {
+    margin-left: auto;
+}
+
+.goToProjectButton {
+    padding: 10px 20px;
+    background-color: darkred;
+    color: #fff;
+    transition-duration: 300ms;
+    border-radius: 32px;
+    font-size: 24px;
+}
+
+.goToProjectButton:hover {
+    background-color: red;
+    transition-duration: 300ms;
+    border-color: red;
+}

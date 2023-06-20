@@ -28,7 +28,7 @@ body {
 }
 
 .nameAndDescriptionSection .lowerPart p {
-    max-height:8em;
+    height:8em;
     overflow: auto;
 }
 
@@ -105,4 +105,46 @@ body {
     flex-direction: column;
     gap: 10px;
     flex: 1;
+}
+
+.documentCard {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+    text-align: left;
+    padding: 1em;
+    height: 3.5em;
+    border-radius: 20px;
+    border: darkred 4px solid;
+}
+
+.uploadImage, .downloadImage {
+    cursor: pointer;
+    height: 2em;
+    transition-timing-function: ease-out;
+    transition-duration: 300ms;
+}
+
+.uploadImage:hover, .downloadImage:hover {
+    transition-timing-function: ease-out;
+    transition-duration: 300ms;
+    fill: red;
+}
+
+.documentButtonsDiv {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+}
+
+.documentTextArea {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.documentStatus {
+    font-size: 0.8em;
 }

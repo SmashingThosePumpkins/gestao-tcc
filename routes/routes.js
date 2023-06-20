@@ -17,6 +17,9 @@ router.use((req, res, next) => {
 
 router.post('/login', loginService.login);
 
+router.get('/login', (req, res, next) => res.redirect('/'))
+router.get('/logout', loginService.logout);
+
 //
 //
 //
@@ -31,7 +34,15 @@ router.get('/', loginService.checkToken, async (req, res) => {
         case ALUNO: {
             const userId = res.cookie.decodedInfo.userId;
             const aluno = await prisma.aluno.findFirst({ where: { id_usuario: userId }, include: { Curso: true } })
-            const listaAlunosProjeto = await prisma.alunosProjeto.findMany({ where: { Aluno: { id_usuario: userId } }, include: { Projeto: true } });
+            const listaAlunosProjeto = await prisma.alunosProjeto.findMany({ 
+                where: { 
+                    Aluno: {
+                         id_usuario: userId 
+                        } 
+                    }, include: { 
+                        Projeto: true 
+                    } 
+                });
             const listaProjetos = listaAlunosProjeto.map((projeto) => projeto.Projeto)
             res.render('indexAluno.ejs', {
                 aluno: aluno,
@@ -42,7 +53,14 @@ router.get('/', loginService.checkToken, async (req, res) => {
         }
         case ORIENTADOR: {
             const userId = res.cookie.decodedInfo.userId;
-            const professor = await prisma.professor.findFirst({ where: { userId } })
+            const professor = await prisma.professor.findFirst({ 
+                where: { 
+                    id_usuario: userId
+                },
+                include: {
+                    Usuario: true
+                }  
+            })
             const listaProjetos = await prisma.projeto.findMany({ where: { id_orientador: professor.id } })
             res.render('indexOrientador.ejs', {
                 professor: professor,

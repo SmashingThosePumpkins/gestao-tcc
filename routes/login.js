@@ -29,6 +29,13 @@ async function login(req, res) {
     }
 };
 
+
+async function logout(req, res) {
+    res.cookie.auth = null;
+    res.cookie.decodedInfo = null;
+    res.redirect('/login');
+};
+
 async function checkToken(req, res, next) {
     const token = res.cookie.auth
     jwt.verify(token, SECRET_KEY, function (err, decoded) {
@@ -68,4 +75,4 @@ async function isAdmin(req, res, next) {
     res.status(401).send('Acesso negado.')
 }
 
-module.exports = { login, checkToken, isStudent, isOrienter, isAdmin }
+module.exports = { login, logout, checkToken, isStudent, isOrienter, isAdmin }

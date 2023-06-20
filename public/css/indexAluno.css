@@ -36,8 +36,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0;
-    max-width: 60vw;
-    max-height: 35vh;
 }
 
 .projectSection h2 {
@@ -47,10 +45,12 @@ body {
 .mainPageProjectCard {
     display: flex;
     flex-direction: column;
+    position: relative;
     border-radius: 0px 0px 20px 20px;
     border: 2px darkred solid;
-    min-height: 22vh;
     padding: 10px 15px;
+    width: 60em;
+    height: 11em;
 }
 
 .goToProjectButton {
@@ -64,6 +64,7 @@ body {
     position: absolute;
     right: 15px;
     bottom: 15px;
+    float: right;
 }
 
 .goToProjectButton:hover {
@@ -73,8 +74,7 @@ body {
 }
 
 .projectCardDescription {
-    white-space: nowrap;
+    white-space: normal;
+    word-wrap: break-word;
     overflow: hidden;
-    display: block;
-    text-overflow: ellipsis;
 }
