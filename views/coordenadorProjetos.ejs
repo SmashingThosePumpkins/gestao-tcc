@@ -50,14 +50,14 @@
             <form class="form" action="/projeto" method="POST" onsubmit="return validateAddForm()">
                 <input type="text" class="row textInput" name="nome" id="add-nome" placeholder="Nome" required maxlength="50">
                 <textarea class="row textInput textInputArea" name="descricao" id="add-descricao" placeholder="Descrição" maxlength="500"></textarea>
-                <select class="row selectInput" name="situacao" id="add-situacao">
+                <select class="selectInput" name="situacao" id="add-situacao">
                     <option value="0">Pré-projeto</option>
                     <option value="1">Qualificação</option>
                     <option value="2">Defesa</option>
                     <option value="3">Concluído</option>
                     <option value="4">Trancado</option>
                 </select>
-                <select class="row selectInput" name="curso" id="add-curso">
+                <select class="selectInput" name="curso" id="add-curso">
                     <% if (cursos) for (let i = 0; i < cursos.length; i++) { %>
                         <% const curso = cursos[i] %>
                         <option value="<%= curso.id %>"><%= curso.nome %></option>
@@ -105,14 +105,14 @@
                 <input type="hidden" name="id" id="edit-id">
                 <input type="text" class="row textInput" name="nome" id="edit-nome" placeholder="Nome" required maxlength="50">
                 <textarea class="row textInput textInputArea" name="descricao" id="edit-descricao" placeholder="Descrição" maxlength="500"></textarea>
-                <select class="row selectInput" name="situacao" id="edit-situacao">
+                <select class="selectInput" name="situacao" id="edit-situacao">
                     <option value="0">Pré-projeto</option>
                     <option value="1">Qualificação</option>
                     <option value="2">Defesa</option>
                     <option value="3">Concluído</option>
                     <option value="4">Trancado</option>
                 </select>
-                <select class="row selectInput" name="curso" id="edit-curso">
+                <select class="selectInput" name="curso" id="edit-curso">
                     <% if (cursos) for (let i = 0; i < cursos.length; i++) { %>
                         <% const curso = cursos[i] %>
                         <option value="<%= curso.id %>"><%= curso.nome %></option>
