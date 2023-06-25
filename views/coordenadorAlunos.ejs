@@ -30,9 +30,11 @@
                 <span class="span-row span-row-medium">
                     <%= aluno.ra %>
                 </span>
-                <span class="span-row span-row-large">
-                    <%= aluno.Curso.nome %>
-                </span>
+                <% if (aluno.Curso) { %>
+                    <span class="span-row span-row-large">
+                        <%= aluno.Curso.nome %>
+                    </span>
+                <% } %>
                 <div class="flex-end-buttons-row">
                     <button class="flex-end-button" onclick="toggleDeleteModal('<%= JSON.stringify(aluno) %>')">🗑️</button>
                     <button class="flex-end-button" onclick="toggleEditModal('<%= JSON.stringify(aluno) %>')">✏️</button>
@@ -49,7 +51,7 @@
             <form class="form" action="/aluno" method="POST" onsubmit="return validateAddForm()">
                 <input type="text" class="row textInput" name="nome" id="add-nome" placeholder="Nome" required maxlength="50">
 
-                <input type="text" class="textInput" name="ra" id="add-ra" placeholder="RA" required pattern="[0-9]{6}" maxlength="6">
+                <input type="text" class="textInput" name="ra" id="add-ra" placeholder="RA" required pattern="[0-9]{13}" maxlength="13">
 
                 <input type="text" class="textInput" name="email" id="add-email" placeholder="E-mail Institucional" required maxlength="30" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
 
@@ -115,7 +117,7 @@
                 <input type="hidden" name="id" id="edit-id">
                 <input type="text" class="row textInput" name="nome" id="edit-nome" placeholder="Nome" required maxlength="50">
 
-                <input type="text" class="textInput" name="ra" id="edit-ra" placeholder="RA" required pattern="[0-9]{6}" maxlength="6">
+                <input type="text" class="textInput" name="ra" id="edit-ra" placeholder="RA" required pattern="[0-9]{13}" maxlength="13">
 
                 <input type="text" class="textInput" name="email" id="edit-email" placeholder="E-mail Institucional" required maxlength="30" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
 
@@ -151,7 +153,7 @@
                 raInput.value = aluno.ra;
                 emailInput.value = aluno.Usuario.login;
                 termoInput.value = aluno.termo;
-                cursoInput.value = aluno.Curso.id;
+                cursoInput.value = aluno.id_curso;
                 idInput.value = aluno.id;
             }
             

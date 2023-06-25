@@ -27,6 +27,11 @@
                         <span class="span-row span-row-large">
                             <%= projeto.nome %>
                         </span>
+                        <% if (projeto.Curso) { %>
+                            <span class="span-row span-row-large">
+                                <%= projeto.Curso.nome %>
+                            </span>
+                        <% } %>
                         <div class="flex-end-buttons-row">
                             <button class="flex-end-button" onclick="toggleFilesModal()">💾</button>
                             <button class="flex-end-button" onclick="toggleMembersModal()">👤</button>
@@ -51,6 +56,12 @@
                     <option value="2">Defesa</option>
                     <option value="3">Concluído</option>
                     <option value="4">Trancado</option>
+                </select>
+                <select class="row selectInput" name="curso" id="add-curso">
+                    <% if (cursos) for (let i = 0; i < cursos.length; i++) { %>
+                        <% const curso = cursos[i] %>
+                        <option value="<%= curso.id %>"><%= curso.nome %></option>
+                    <% } %>
                 </select>
                 <div class="row">
                     <input type="submit" value="Adicionar" class="row botaoSubmit">
@@ -101,6 +112,12 @@
                     <option value="3">Concluído</option>
                     <option value="4">Trancado</option>
                 </select>
+                <select class="row selectInput" name="curso" id="edit-curso">
+                    <% if (cursos) for (let i = 0; i < cursos.length; i++) { %>
+                        <% const curso = cursos[i] %>
+                        <option value="<%= curso.id %>"><%= curso.nome %></option>
+                    <% } %>
+                </select>
                 <div class="row">
                     <input type="submit" value="Salvar" class="row botaoSubmit">
                 </div>
@@ -134,11 +151,13 @@
                 const nomeInput = document.getElementById('edit-nome');
                 const descricaoInput = document.getElementById('edit-descricao');
                 const situacaoInput = document.getElementById('edit-situacao');
+                const cursoInput = document.getElementById('edit-curso');
                 const idInput = document.getElementById('edit-id');
             
                 nomeInput.value = projeto.nome;
                 descricaoInput.value = projeto.descricao;
                 situacaoInput.value = projeto.status;
+                cursoInput.value = projeto.idCurso;
                 idInput.value = projeto.id;
             }
 

@@ -108,9 +108,11 @@ router.get('/coordenador/orientadores', loginService.checkToken, loginService.is
 })
 
 router.get('/coordenador/projetos', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
-    const projetos = await prisma.projeto.findMany();
+    const projetos = await prisma.projeto.findMany({ include: { Curso: true } });
+    const cursos = await prisma.curso.findMany();
     res.render('coordenadorProjetos.ejs', {
         projetos: projetos,
+        cursos: cursos,
         userInfo: res.cookie.decodedInfo
     })
 })
@@ -290,13 +292,14 @@ router.get('/professor/delete/:id', loginService.checkToken, loginService.isAdmi
 
 router.post('/projeto', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     try {
-        const { nome, descricao, situacao } = req.body;
+        const { nome, descricao, situacao, curso } = req.body;
 
         await prisma.projeto.create({
             data: {
                 nome: nome,
                 descricao: descricao,
-                status: parseInt(situacao)
+                status: parseInt(situacao),
+                id_curso: parseInt(curso)
             }
         });
     } catch (error) {
@@ -309,7 +312,7 @@ router.post('/projeto', loginService.checkToken, loginService.isAdmin, async (re
 
 router.post('/projeto/edit', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     try {
-        const { id, nome, descricao, situacao } = req.body;
+        const { id, nome, descricao, situacao, curso } = req.body;
 
         await prisma.projeto.update({
             where: {
@@ -318,7 +321,8 @@ router.post('/projeto/edit', loginService.checkToken, loginService.isAdmin, asyn
             data: {
                 nome: nome,
                 descricao: descricao,
-                status: parseInt(situacao)
+                status: parseInt(situacao),
+                id_curso: parseInt(curso)
             }
         });
     } catch (error) {

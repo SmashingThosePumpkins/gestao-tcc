@@ -119,6 +119,7 @@ body {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 20px;
+    max-width: 20em;
 }
 
 .botaoSubmit {
