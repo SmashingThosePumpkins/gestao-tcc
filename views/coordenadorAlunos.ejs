@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/reset.css" rel="stylesheet">
     <link href="/css/paginaListaAdministrador.css" rel="stylesheet">
-    <title>Gestão - Alunos</title>
+    <title>GradMate</title>
 </head>
 
 <body class="fade-in">
@@ -15,33 +15,216 @@
     <div class="container">
         <div class="topRow">
             <%- include('partials/searchBox.ejs') %>
-                <button class="addButton" onclick="">Adicionar aluno ➕</button>
+            <button class="addButton" onclick="toggleAddModal()">Adicionar aluno ➕</button>
         </div>
         <div class="objectListWrapper">
             <% if (!alunos || Object.keys(alunos).length===0) { %>
-                <p>Ops! Parece que não existe nenhum aluno cadastrado ainda.</p>
+            <p>Ops! Parece que não existe nenhum aluno cadastrado ainda.</p>
             <% } else { %>
-                <% for (i = 0; i < alunos.length; i++) { %>
-                    <% let aluno = alunos[i] %>
-                    <div class="objectListItem">
-                        <span class="span-row span-row-large">
-                            <%= aluno.nome %>
-                        </span>
-                        <span class="span-row span-row-medium">
-                            <%= aluno.ra %>
-                        </span>
-                        <span class="span-row span-row-large">
-                            <%= aluno.Curso.nome %>
-                        </span>
-                        <div class="flex-end-buttons-row">
-                            <button class="flex-end-button">🗑️</button>
-                            <button class="flex-end-button">✏️</button>
-                        </div>
-                    </div>
-                <% } %>
+            <% for (i = 0; i < alunos.length; i++) { %>
+            <% let aluno = alunos[i] %>
+            <div class="objectListItem">
+                <span class="span-row span-row-large">
+                    <%= aluno.nome %>
+                </span>
+                <span class="span-row span-row-medium">
+                    <%= aluno.ra %>
+                </span>
+                <span class="span-row span-row-large">
+                    <%= aluno.Curso.nome %>
+                </span>
+                <div class="flex-end-buttons-row">
+                    <button class="flex-end-button" onclick="toggleDeleteModal('<%= JSON.stringify(aluno) %>')">🗑️</button>
+                    <button class="flex-end-button" onclick="toggleEditModal('<%= JSON.stringify(aluno) %>')">✏️</button>
+                </div>
+            </div>
+            <% } %>
             <% } %>
         </div>
     </div>
+    <div id="addModal" class="modal">
+        <div class="modalContent">
+            <button class="exitModalButton" onclick="toggleAddModal()">❌</button>
+            <h2>Adicionar novo aluno</h2>
+            <form class="form" action="/aluno" method="POST" onsubmit="return validateAddForm()">
+                <input type="text" class="row textInput" name="nome" id="add-nome" placeholder="Nome" required maxlength="50">
+
+                <input type="text" class="textInput" name="ra" id="add-ra" placeholder="RA" required pattern="[0-9]{6}" maxlength="6">
+
+                <input type="text" class="textInput" name="email" id="add-email" placeholder="E-mail Institucional" required maxlength="30" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+
+                <select class="selectInput" name="idCurso" id="add-idCurso">
+                    <% if (cursos) for (let i = 0; i < cursos.length; i++) { %>
+                        <% const curso = cursos[i]; %>
+                        <option value="<%= curso.id %>"><%= curso.nome %></option>
+                    <% } %>
+                </select>
+                <input type="number" class="textInput" name="termo" placeholder="Termo" id="add-termo" required min="1" max="11">
+
+                <div class="row">
+                    <input type="submit" value="Adicionar" class="row botaoSubmit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function toggleAddModal() {
+            const addModal = document.getElementById('addModal');
+
+            if (addModal.style.display === 'flex') {
+                addModal.style.display = 'none';
+                return;
+            }
+            addModal.style.display = 'flex';
+        }
+
+        function validateAddForm() {
+            const nomeInput = document.getElementById('add-nome');
+            const raInput = document.getElementById('add-ra');
+            const emailInput = document.getElementById('add-email');
+            const termoInput = document.getElementById('add-termo');
+
+            if (nomeInput.value.trim() === '' || nomeInput.value.length > 50) {
+                alert('Por favor, preencha o campo de nome corretamente (máximo de 50 caracteres).');
+                return false;
+            }
+
+            if (raInput.value.trim() === '' || !/^\d{13}$/.test(raInput.value)) {
+                alert('Por favor, preencha o campo de RA corretamente (13 dígitos).');
+                return false;
+            }
+
+            if (emailInput.value.trim() === '' || emailInput.value.length > 30 || !/\S+@\S+\.\S+/.test(emailInput.value)) {
+                alert('Por favor, preencha o campo de E-mail Institucional corretamente (máximo de 30 caracteres).');
+                return false;
+            }
+
+            if (termoInput.value.trim() === '' || termoInput.value < 1 || termoInput.value > 11) {
+                alert('Por favor, preencha o campo Termo corretamente.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+    <div id="editModal" class="modal">
+        <div class="modalContent">
+            <button class="exitModalButton" onclick="toggleEditModal(null)">❌</button>
+            <h2>Editar aluno</h2>
+            <form class="form" action="/aluno/edit" method="POST" onsubmit="return validateEditForm()">
+                <input type="hidden" name="id" id="edit-id">
+                <input type="text" class="row textInput" name="nome" id="edit-nome" placeholder="Nome" required maxlength="50">
+
+                <input type="text" class="textInput" name="ra" id="edit-ra" placeholder="RA" required pattern="[0-9]{6}" maxlength="6">
+
+                <input type="text" class="textInput" name="email" id="edit-email" placeholder="E-mail Institucional" required maxlength="30" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+
+                <select class="selectInput" name="idCurso" id="edit-idCurso">
+                    <% if (cursos) for (let i = 0; i < cursos.length; i++) { %>
+                        <% const curso = cursos[i]; %>
+                        <option value="<%= curso.id %>"><%= curso.nome %></option>
+                    <% } %>
+                </select>
+                <input type="number" class="textInput" name="termo" placeholder="Termo" id="edit-termo" required min="1" max="11">
+
+                <div class="row">
+                    <input type="submit" value="Editar" class="row botaoSubmit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function toggleEditModal(jsonAluno) {
+            const editModal = document.getElementById('editModal');
+
+            if (jsonAluno) {
+                const aluno = JSON.parse(jsonAluno);
+
+                const nomeInput = document.getElementById('edit-nome');
+                const raInput = document.getElementById('edit-ra');
+                const emailInput = document.getElementById('edit-email');
+                const termoInput = document.getElementById('edit-termo');
+                const cursoInput = document.getElementById('edit-idCurso');
+                const idInput = document.getElementById('edit-id');
+            
+                nomeInput.value = aluno.nome;
+                raInput.value = aluno.ra;
+                emailInput.value = aluno.Usuario.login;
+                termoInput.value = aluno.termo;
+                cursoInput.value = aluno.Curso.id;
+                idInput.value = aluno.id;
+            }
+            
+            if (editModal.style.display === 'flex') {
+                editModal.style.display = 'none';
+                return;
+            }
+            editModal.style.display = 'flex';
+        }
+
+        function validateEditForm() {
+            const nomeInput = document.getElementById('edit-nome');
+            const raInput = document.getElementById('edit-ra');
+            const emailInput = document.getElementById('edit-email');
+            const termoInput = document.getElementById('edit-termo');
+
+            if (nomeInput.value.trim() === '' || nomeInput.value.length > 50) {
+                alert('Por favor, preencha o campo de nome corretamente (máximo de 50 caracteres).');
+                return false;
+            }
+
+            if (raInput.value.trim() === '' || !/^\d{13}$/.test(raInput.value)) {
+                alert('Por favor, preencha o campo de RA corretamente (13 dígitos).');
+                return false;
+            }
+
+            if (emailInput.value.trim() === '' || emailInput.value.length > 30 || !/\S+@\S+\.\S+/.test(emailInput.value)) {
+                alert('Por favor, preencha o campo de E-mail Institucional corretamente (máximo de 30 caracteres).');
+                return false;
+            }
+
+            if (termoInput.value.trim() === '' || termoInput.value < 1 || termoInput.value > 11) {
+                alert('Por favor, preencha o campo Termo corretamente.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+    <div id="deleteModal" class="modal">
+        <div class="modalContent">
+            <button class="exitModalButton" onclick="toggleDeleteModal(null)">❌</button>
+            <h2>Você deseja remover <span id="delete-nome"></span>?</h2>
+            <div class="row">
+                <button id="delete-no" class="botaoSubmit" onclick="toggleDeleteModal(null)">Não</button>
+                <button id="delete-yes" class="botaoSubmit">Sim</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleDeleteModal(jsonAluno) {
+            const deleteModal = document.getElementById('deleteModal');
+
+            if (jsonAluno) {
+                const aluno = JSON.parse(jsonAluno);
+                
+                const nome = document.getElementById("delete-nome");
+                const deleteButton = document.getElementById("delete-yes")
+
+                nome.innerText = aluno.nome;
+                deleteButton.onclick = function () {
+                    location.href = `/aluno/delete/${aluno.id}`;
+                };
+                deleteButton.focus()
+            }
+
+            if (deleteModal.style.display === 'flex') {
+                deleteModal.style.display = 'none';
+                return;
+            }
+            deleteModal.style.display = 'flex';
+        }
+    </script>
 </body>
 
 </html>

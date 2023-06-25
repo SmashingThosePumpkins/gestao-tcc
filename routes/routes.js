@@ -34,15 +34,15 @@ router.get('/', loginService.checkToken, async (req, res) => {
         case ALUNO: {
             const userId = res.cookie.decodedInfo.userId;
             const aluno = await prisma.aluno.findFirst({ where: { id_usuario: userId }, include: { Curso: true } })
-            const listaAlunosProjeto = await prisma.alunosProjeto.findMany({ 
-                where: { 
+            const listaAlunosProjeto = await prisma.alunosProjeto.findMany({
+                where: {
                     Aluno: {
-                         id_usuario: userId 
-                        } 
-                    }, include: { 
-                        Projeto: true 
-                    } 
-                });
+                        id_usuario: userId
+                    }
+                }, include: {
+                    Projeto: true
+                }
+            });
             const listaProjetos = listaAlunosProjeto.map((projeto) => projeto.Projeto)
             res.render('indexAluno.ejs', {
                 aluno: aluno,
@@ -53,13 +53,13 @@ router.get('/', loginService.checkToken, async (req, res) => {
         }
         case ORIENTADOR: {
             const userId = res.cookie.decodedInfo.userId;
-            const professor = await prisma.professor.findFirst({ 
-                where: { 
+            const professor = await prisma.professor.findFirst({
+                where: {
                     id_usuario: userId
                 },
                 include: {
                     Usuario: true
-                }  
+                }
             })
             const listaProjetos = await prisma.projeto.findMany({ where: { id_orientador: professor.id } })
             res.render('indexOrientador.ejs', {
@@ -81,18 +81,26 @@ router.get('/', loginService.checkToken, async (req, res) => {
 router.get('/coordenador/alunos', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     const alunos = await prisma.aluno.findMany({
         include: {
-            Curso: true
+            Curso: true,
+            Usuario: true
         }
     });
 
+    const cursos = await prisma.curso.findMany({});
+
     res.render('coordenadorAlunos.ejs', {
         alunos: alunos,
+        cursos: cursos,
         userInfo: res.cookie.decodedInfo
     })
 })
 
 router.get('/coordenador/orientadores', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
-    const orientadores = await prisma.professor.findMany();
+    const orientadores = await prisma.professor.findMany({
+        include: {
+            Usuario: true
+        }
+    });
     res.render('coordenadorOrientadores.ejs', {
         orientadores: orientadores,
         userInfo: res.cookie.decodedInfo
@@ -145,8 +153,242 @@ router.get('/projeto/:id', loginService.checkToken, async (req, res, next) => {
 //
 
 router.post('/aluno', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
-    const aluno = req.body;
+    try {
+        const { nome, ra, idCurso, termo, email } = req.body;
 
-})
+        await prisma.usuario.create({
+            data: {
+                login: email,
+                senha: '1234',
+                tipo: 0,
+                Aluno: {
+                    create: {
+                        nome: nome,
+                        ra: ra,
+                        termo: parseInt(termo),
+                        Curso: {
+                            connect: {
+                                id: parseInt(idCurso)
+                            }
+                        }
+                    }
+                },
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/alunos');
+    }
+});
+
+router.post('/aluno/edit', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { id, nome, ra, idCurso, termo, email } = req.body;
+
+        await prisma.aluno.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                nome: nome,
+                ra: ra,
+                termo: parseInt(termo),
+                Usuario: {
+                    update: {
+                        login: email
+                    }
+                },
+                Curso: { 
+                    connect: { 
+                        id: parseInt(idCurso) 
+                    } 
+                }
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/alunos');
+    }
+});
+
+router.get('/aluno/delete/:id', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        await prisma.aluno.delete({ where: { id: parseInt(id) } })
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/alunos');
+    }
+});
+
+router.post('/professor', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { nome, email } = req.body;
+
+        await prisma.usuario.create({
+            data: {
+                login: email,
+                senha: '1234',
+                tipo: 1,
+                Professor: {
+                    create: {
+                        nome: nome,
+                    }
+                },
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/orientadores');
+    }
+});
+
+router.post('/professor/edit', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { id, nome, email } = req.body;
+
+        await prisma.professor.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                nome: nome,
+                Usuario: {
+                    update: {
+                        login: email
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/orientadores');
+    }
+});
+
+router.get('/professor/delete/:id', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        await prisma.professor.delete({ where: { id: parseInt(id) } })
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/orientadores');
+    }
+});
+
+router.post('/projeto', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { nome, descricao, situacao } = req.body;
+
+        await prisma.projeto.create({
+            data: {
+                nome: nome,
+                descricao: descricao,
+                status: parseInt(situacao)
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/projetos');
+    }
+});
+
+router.post('/projeto/edit', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { id, nome, descricao, situacao } = req.body;
+
+        await prisma.projeto.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                nome: nome,
+                descricao: descricao,
+                status: parseInt(situacao)
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/projetos');
+    }
+});
+
+router.get('/projeto/delete/:id', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        await prisma.projeto.delete({ where: { id: parseInt(id) } })
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/projetos');
+    }
+});
+
+router.post('/curso', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { nome } = req.body;
+
+        await prisma.curso.create({
+            data: {
+                nome: nome
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/cursos');
+    }
+});
+
+router.post('/curso/edit', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { id, nome } = req.body;
+
+        await prisma.curso.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                nome: nome
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/cursos');
+    }
+});
+
+router.get('/curso/delete/:id', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        await prisma.curso.delete({ where: { id: parseInt(id) } })
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/cursos');
+    }
+});
+
 
 module.exports = router

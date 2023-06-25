@@ -15,7 +15,7 @@
     <div class="container">
         <div class="topRow">
             <%- include('partials/searchBox.ejs') %>
-            <button class="addButton">Adicionar curso ➕</button>
+            <button class="addButton" onclick="toggleAddModal()">Adicionar curso ➕</button>
         </div>
         <div class="objectListWrapper">
             <% if (!cursos || Object.keys(cursos).length === 0) { %>
@@ -28,15 +28,158 @@
                             <%= curso.nome %>
                         </span>
                         <div class="flex-end-buttons-row">
-                            <button class="flex-end-button">👤</button>
-                            <button class="flex-end-button">🗑️</button>
-                            <button class="flex-end-button">✏️</button>
+                            <button class="flex-end-button" onclick="toggleMembersModal()">👤</button>
+                            <button class="flex-end-button" onclick="toggleDeleteModal('<%= JSON.stringify(curso) %>')">🗑️</button>
+                            <button class="flex-end-button" onclick="toggleEditModal('<%= JSON.stringify(curso) %>')">✏️</button>
                         </div>
                     </div>
                 <% } %>
             <% } %>
         </div>
     </div>
+    <div id="addModal" class="modal">
+        <div class="modalContent">
+            <button class="exitModalButton" onclick="toggleAddModal()">❌</button>
+            <h2>Adicionar novo curso</h2>
+            <form class="form" action="/curso" method="POST" onsubmit="return validateAddForm()">
+                <input type="text" class="row textInput" name="nome" id="add-nome" placeholder="Nome" required maxlength="50">
+                <div class="row">
+                    <input type="submit" value="Adicionar" class="row botaoSubmit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function validateAddForm() {
+            const nomeInput = document.getElementById('add-nome');
+            const descricaoInput = document.getElementById('add-descricao');
+
+            if (nomeInput.value.trim() === '' || nomeInput.value.length > 50) {
+                alert('Por favor, preencha o campo de nome corretamente (máximo de 50 caracteres).');
+                return false;
+            }
+
+            if (descricaoInput.value.trim() === '' || descricaoInput.value.length > 500) {
+                alert('Por favor, preencha o campo de descrição corretamente (máximo de 500 caracteres).');
+                return false;
+            }
+
+            return true;
+        }
+
+        function toggleAddModal() {
+            const addModal = document.getElementById('addModal');
+
+            if (addModal.style.display === 'flex') {
+                addModal.style.display = 'none';
+                return;
+            }
+            addModal.style.display = 'flex';
+        }
+    </script>
+    <div id="editModal" class="modal">
+        <div class="modalContent">
+            <button class="exitModalButton" onclick="toggleEditModal()">❌</button>
+            <h2>Editar curso</h2>
+            <form class="form" action="/curso/edit" method="POST" onsubmit="return validateEditForm()">
+                <input type="hidden" name="id" id="edit-id">
+                <input type="text" class="row textInput" name="nome" id="edit-nome" placeholder="Nome" required maxlength="50">
+                <div class="row">
+                    <input type="submit" value="Salvar" class="row botaoSubmit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function validateEditForm() {
+            const nomeInput = document.getElementById('edit-nome');
+            const descricaoInput = document.getElementById('edit-descricao');
+
+            if (nomeInput.value.trim() === '' || nomeInput.value.length > 50) {
+                alert('Por favor, preencha o campo de nome corretamente (máximo de 50 caracteres).');
+                return false;
+            }
+
+            if (descricaoInput.value.trim() === '' || descricaoInput.value.length > 500) {
+                alert('Por favor, preencha o campo de descrição corretamente (máximo de 500 caracteres).');
+                return false;
+            }
+
+            return true;
+        }
+
+        function toggleEditModal(jsonCurso) {
+            const editModal = document.getElementById('editModal');
+
+            if (jsonCurso) {
+                const curso = JSON.parse(jsonCurso);
+
+                const nomeInput = document.getElementById('edit-nome');
+                const idInput = document.getElementById('edit-id');
+            
+                nomeInput.value = curso.nome;
+                idInput.value = curso.id;
+            }
+
+            if (editModal.style.display === 'flex') {
+                editModal.style.display = 'none';
+                return;
+            }
+            editModal.style.display = 'flex';
+        }
+    </script>
+    <div id="deleteModal" class="modal">
+        <div class="modalContent">
+            <button class="exitModalButton" onclick="toggleDeleteModal(null)">❌</button>
+            <h2>Você deseja remover <span id="delete-nome"></span>?</h2>
+            <div class="row">
+                <button id="delete-no" class="botaoSubmit" onclick="toggleDeleteModal(null)">Não</button>
+                <button id="delete-yes" class="botaoSubmit">Sim</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleDeleteModal(jsonCurso) {
+            const deleteModal = document.getElementById('deleteModal');
+
+            if (jsonCurso) {
+                const curso = JSON.parse(jsonCurso);
+
+                const nome = document.getElementById("delete-nome");
+                const deleteButton = document.getElementById("delete-yes")
+
+                nome.innerText = curso.nome;
+                deleteButton.onclick = function () {
+                    location.href = `/curso/delete/${curso.id}`;
+                };
+                deleteButton.focus()
+            }
+
+            if (deleteModal.style.display === 'flex') {
+                deleteModal.style.display = 'none';
+                return;
+            }
+            deleteModal.style.display = 'flex';
+        }
+    </script>
+    <div id="membersModal" class="modal">
+        <div class="modalContent">
+            <button class="exitModalButton" onclick="toggleMembersModal()">❌</button>
+            <h2>Vincular membros</h2>
+            <!-- Conteúdo do modal para vincular membros -->
+        </div>
+    </div>
+    <script>
+        function toggleMembersModal() {
+            const membersModal = document.getElementById('membersModal');
+
+            if (membersModal.style.display === 'flex') {
+                membersModal.style.display = 'none';
+                return;
+            }
+            membersModal.style.display = 'flex';
+        }
+    </script>
 </body>
 
 </html>
