@@ -11,6 +11,7 @@
 </head>
 
 <body class="fade-in">
+    <div id="loading" class="loading"><img src="/img/loading.gif"></div>
     <%- include('partials/backButton.ejs') %>
     <div class="container">
         <div class="topRow">
@@ -34,7 +35,7 @@
                         <% } %>
                         <div class="flex-end-buttons-row">
                             <button class="flex-end-button" onclick="toggleFilesModal()">💾</button>
-                            <button class="flex-end-button" onclick="toggleMembersModal()">👤</button>
+                            <button class="flex-end-button" onclick="toggleMembersModal('<%= projeto.id %>')">👤</button>
                             <button class="flex-end-button" onclick="toggleDeleteModal('<%= JSON.stringify(projeto) %>')">🗑️</button>
                             <button class="flex-end-button" onclick="toggleEditModal('<%= JSON.stringify(projeto) %>')">✏️</button>
                         </div>
@@ -221,21 +222,139 @@
         }
     </script>
     <div id="membersModal" class="modal">
-        <div class="modalContent">
-            <button class="exitModalButton" onclick="toggleMembersModal()">❌</button>
-            <h2>Vincular membros</h2>
-            <!-- Conteúdo do modal para vincular membros -->
+        <div class="modalContent-l">
+            <button class="exitModalButton" onclick="toggleMembersModal(null)">❌</button>
+            <h2>Vincular membros ao projeto</h2>
+            <form class="formMembros" action="/projeto/vincular" method="POST">
+                <input type="hidden" name="id" id="members-id">
+                <div class="formMembrosListas">
+                    <div class="membersLista">
+                        <h3 style="margin-bottom: 10px;">Alunos</h3>
+                        <%- include('partials/searchBoxMini.ejs') %>
+                        <div id="members-listaAlunos" class="membersListaInner">
+                        </div>
+                    </div>
+                    <div class="membersLista">
+                        <h3 style="margin-bottom: 10px;">Orientador</h3>
+                        <%- include('partials/searchBoxMini.ejs') %>
+                        <div id="members-listaProfessores" class="membersListaInner">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" value="Vincular" class="row botaoSubmit">
+                </div>
+            </form>
         </div>
     </div>
     <script>
-        function toggleMembersModal() {
+        function toggleMembersModal(idProjeto) {
             const membersModal = document.getElementById('membersModal');
+            const listaAlunosDiv = document.getElementById('members-listaAlunos');
+            listaAlunosDiv.innerHTML = '';
+            const listaProfessoresDiv = document.getElementById('members-listaProfessores');
+            listaProfessoresDiv.innerHTML = '';
 
             if (membersModal.style.display === 'flex') {
                 membersModal.style.display = 'none';
                 return;
             }
-            membersModal.style.display = 'flex';
+
+            const idInput = document.getElementById('members-id');
+            idInput.value = idProjeto;
+
+            const loadingScreen = document.getElementById('loading');
+            loadingScreen.style.display = 'flex'
+            fetch('/api/alunos-e-professores')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+
+                    const alunos = data.alunos;
+                    const alunosProjeto = alunos.filter(aluno => checkIfOnProject(aluno, idProjeto))
+                    const alunosForaDoProjeto = alunos.filter(aluno => !checkIfOnProject(aluno, idProjeto))
+                    
+                    alunosProjeto.forEach(aluno => {
+                        listaAlunosDiv.appendChild(buildBasicStudentCheckbox(aluno, true));
+                    })
+                    alunosForaDoProjeto.forEach(aluno => {
+                        listaAlunosDiv.appendChild(buildBasicStudentCheckbox(aluno, false));
+                    })
+
+                    const professores = data.professores;
+                    const professoresProjeto = professores.filter(professor => checkIfOnProject(professor, idProjeto))
+                    const professoresForaDoProjeto = professores.filter(professor => !checkIfOnProject(professor, idProjeto))
+                    professoresProjeto.forEach(professor => {
+                        listaProfessoresDiv.appendChild(buildBasicProfessorRadio(professor, true));
+                    })
+                    professoresForaDoProjeto.forEach(professor => {
+                        listaProfessoresDiv.appendChild(buildBasicProfessorRadio(professor, false));
+                    })
+
+                    loadingScreen.style.display = 'none';
+                    membersModal.style.display = 'flex';
+            })
+            .catch(error => {
+                console.error('Erro ao buscar a lista de alunos e professores:', error);
+                loadingScreen.style.display = 'none';
+            });
+        }
+
+        function checkIfOnProject(obj, idProjeto) {
+            var projetos = obj.Projetos;
+            if (!projetos) {projetos = obj.Projeto
+                return projetos.some((projeto) => {
+                    return projeto.id == idProjeto
+                }) 
+            } else {
+                return projetos.some((projeto) => {
+                    return projeto.id_projeto == idProjeto
+                })
+            }
+        }
+
+        function buildBasicStudentCheckbox(aluno, checked) {
+            var checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = "checkbox" + aluno.id;
+            checkbox.name = "idAlunos[]";
+            checkbox.value = aluno.id;
+            if (checked) {
+                checkbox.checked = true;
+            }
+
+            var label = document.createElement("label");
+            label.htmlFor = "checkbox" + aluno.id;
+            label.appendChild(document.createTextNode(aluno.nome));
+
+            var container = document.createElement("div");
+            container.classList.add("inputContainer")
+            container.appendChild(label);
+            container.appendChild(checkbox);
+
+            return container;
+        }
+
+        function buildBasicProfessorRadio(professor, checked) {
+            var radio = document.createElement("input");
+            radio.type = "radio";
+            radio.id = "radio" + professor.id;
+            radio.name = "idProfessor";
+            radio.value = professor.id;
+            if (checked) {
+                radio.checked = true;
+            }
+
+            var label = document.createElement("label");
+            label.htmlFor = "radio" + professor.id;
+            label.appendChild(document.createTextNode(professor.nome));
+
+            var container = document.createElement("div");
+            container.classList.add("inputContainer")
+            container.appendChild(label);
+            container.appendChild(radio);
+
+            return container;
         }
     </script>
 </body>

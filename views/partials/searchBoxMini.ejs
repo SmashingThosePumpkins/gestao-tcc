@@ -1,0 +1,33 @@
+<style>
+    .searchBoxWrapperMini {
+        position: relative;
+        display: flex;
+    }
+
+    .searchBoxMini {
+        width: calc(20vw - 25px);
+        outline: none;
+        border: none;
+        border-bottom: 3px solid darkred;
+        font-size: 18px;
+    }
+
+    .searchBoxMini:focus {
+        color: darkred;
+    }
+
+    .searchButtonMini {
+        cursor: pointer;
+        width: 50px;
+        background: none;
+        text-align: center;
+        border: none;
+        border-bottom: 3px solid darkred;
+        font-size: 24px;
+    }
+</style>
+
+<div class="searchBoxWrapperMini">
+    <input type="text" class="searchBoxMini" placeholder="Filtrar itens...">
+    <button class="searchButtonMini">🔍</button>
+</div>

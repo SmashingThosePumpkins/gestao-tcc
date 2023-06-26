@@ -22,6 +22,7 @@ body {
 
 .profileCardText {
     flex-grow: 1;
+    max-width: 50em;
 }
 
 .profilePictureBig {
@@ -49,7 +50,7 @@ body {
     border-radius: 0px 0px 20px 20px;
     border: 2px darkred solid;
     padding: 10px 15px;
-    width: 60em;
+    width: 70em;
     height: 11em;
 }
 

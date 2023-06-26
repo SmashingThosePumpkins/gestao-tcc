@@ -161,7 +161,7 @@ router.post('/aluno', loginService.checkToken, loginService.isAdmin, async (req,
         await prisma.usuario.create({
             data: {
                 login: email,
-                senha: '1234',
+                senha: '$2a$12$Y7.SW1Zm9p.Z/glevn1Gue2hRH36qoj/1Cp66t14bSni6.HZB9Zh.',
                 tipo: 0,
                 Aluno: {
                     create: {
@@ -202,10 +202,10 @@ router.post('/aluno/edit', loginService.checkToken, loginService.isAdmin, async 
                         login: email
                     }
                 },
-                Curso: { 
-                    connect: { 
-                        id: parseInt(idCurso) 
-                    } 
+                Curso: {
+                    connect: {
+                        id: parseInt(idCurso)
+                    }
                 }
             }
         });
@@ -236,7 +236,7 @@ router.post('/professor', loginService.checkToken, loginService.isAdmin, async (
         await prisma.usuario.create({
             data: {
                 login: email,
-                senha: '1234',
+                senha: '$2a$12$Y7.SW1Zm9p.Z/glevn1Gue2hRH36qoj/1Cp66t14bSni6.HZB9Zh.',
                 tipo: 1,
                 Professor: {
                     create: {
@@ -345,6 +345,39 @@ router.get('/projeto/delete/:id', loginService.checkToken, loginService.isAdmin,
     }
 });
 
+router.post('/projeto/vincular', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
+    try {
+        const { id, idAlunos, idProfessor } = req.body;
+
+        const projeto = await prisma.projeto.findUnique({ where: { id: Number(id) } });
+        const alunos = idAlunos ? await prisma.aluno.findMany({ where: { id: { in: idAlunos.map(Number) } } }) : null;
+        const professor = idProfessor ? await prisma.professor.findUnique({ where: { id: Number(idProfessor) } }) : null;
+
+        await prisma.alunosProjeto.deleteMany({ where: { id_projeto: parseInt(projeto.id) } })
+
+        if (alunos) {
+            const alunosProjeto = alunos.map(aluno => ({
+                id_aluno: parseInt(aluno.id),
+                id_projeto: parseInt(projeto.id)
+            }));
+
+            await prisma.alunosProjeto.createMany({ data: alunosProjeto });
+        }        
+
+        await prisma.projeto.update({
+            where: { id: parseInt(id) },
+            data: {
+                id_orientador: professor ? parseInt(professor.id) : null
+            } 
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400);
+    } finally {
+        res.redirect('/coordenador/projetos');
+    }
+});
+
 router.post('/curso', loginService.checkToken, loginService.isAdmin, async (req, res, next) => {
     try {
         const { nome } = req.body;
@@ -394,5 +427,18 @@ router.get('/curso/delete/:id', loginService.checkToken, loginService.isAdmin, a
     }
 });
 
+//
+//
+//
+// FETCH
+//
+//
+//
+
+router.get('/api/alunos-e-professores', async (req, res, next) => {
+    const alunos = await prisma.aluno.findMany({ include: { Projetos: true } });
+    const professores = await prisma.professor.findMany({ include: { Projeto: true } });
+    return res.send({ alunos: alunos, professores: professores })
+})
 
 module.exports = router
